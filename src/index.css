@@ -1,1 +1,104 @@
 @import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-obsidian: #090D16;
+    --bg-studio: #0B1120;
+    --color-cyan-glow: #06B6D4;
+    --color-cyan-bright: #00F2FE;
+    --color-neon-blue: #3B82F6;
+    --color-coral-accent: #FF5E62;
+    --text-titanium: #F8FAFC;
+    --text-chrome: #94A3B8;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: #090D16;
+    color: #F8FAFC;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  }
+
+  /* Sleek High-Tech Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 7px;
+    height: 7px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #090D16;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #1E293B;
+    border-radius: 9999px;
+    border: 1px solid rgba(6, 182, 212, 0.2);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #334155;
+    border-color: rgba(6, 182, 212, 0.5);
+  }
+}
+
+@keyframes pulse-cyan {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(6, 182, 212, 0.4);
+    opacity: 0.85;
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(6, 182, 212, 0.7);
+    opacity: 1;
+  }
+}
+
+.animate-pulse-cyan {
+  animation: pulse-cyan 3s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleUp {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.animate-scaleUp {
+  animation: scaleUp 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideDownCenter {
+  from {
+    opacity: 0;
+    transform: translateY(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideUpCenter {
+  from {
+    opacity: 0;
+    transform: translateY(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
