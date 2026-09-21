@@ -422,7 +422,6 @@ function App() {
   const [isSliotModalOpen, setIsSliotModalOpen] = useState(false);
   const [isFiverrModalOpen, setIsFiverrModalOpen] = useState(false);
   const [isMediloopModalOpen, setIsMediloopModalOpen] = useState(false);
-  const [selectedCertTab, setSelectedCertTab] = useState(0);
   const [isCertZoomed, setIsCertZoomed] = useState(false);
   const [activeDesignIndex, setActiveDesignIndex] = useState(0);
   const robotContainerRef = useRef(null);
@@ -451,13 +450,6 @@ function App() {
       document.body.style.overflow = 'unset';
     };
   }, [isProfileOpen, isTshirtGalleryOpen, isPixelEyeModalOpen, isAidsModalOpen, isCertModalOpen, isSliotModalOpen, isFiverrModalOpen, isMediloopModalOpen]);
-
-  // Reset active design index when modal opens
-  useEffect(() => {
-    if (isTshirtGalleryOpen) {
-      setActiveDesignIndex(0);
-    }
-  }, [isTshirtGalleryOpen]);
 
   const scrollToAnchor = (elementId) => {
     document.getElementById(elementId)?.scrollIntoView({ behavior: 'smooth' });
@@ -1017,6 +1009,7 @@ function App() {
                       } else if (proj.id === "fiverr-promo") {
                         setIsFiverrModalOpen(true);
                       } else if (proj.hasShowcase) {
+                        setActiveDesignIndex(0);
                         setIsTshirtGalleryOpen(true);
                       }
                     };

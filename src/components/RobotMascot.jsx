@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState, Suspense } from 'react';
 import { Canvas } from '@react-three/fiber';
 import { useGLTF, useAnimations, OrbitControls, Html } from '@react-three/drei';
 import * as THREE from 'three';
-import { Sparkles, Bot } from 'lucide-react';
+import { Bot } from 'lucide-react';
 
 const ROBOT_GLTF_URL = 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/gltf/RobotExpressive/RobotExpressive.glb';
 
