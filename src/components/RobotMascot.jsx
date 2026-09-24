@@ -34,6 +34,61 @@ function RobotModel() {
   const group = useRef();
   const { scene, animations } = useGLTF(ROBOT_GLTF_URL);
   const { actions } = useAnimations(animations, group);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  );
+
+  // Responsive resize tracking for smooth mobile scaling
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  // Material customization: Deep obsidian titanium body + electric cyan/blue emissive accents
+  useEffect(() => {
+    if (!scene) return;
+    scene.traverse((child) => {
+      if (child.isMesh && child.material) {
+        child.castShadow = true;
+        child.receiveShadow = true;
+
+        const mats = Array.isArray(child.material) ? child.material : [child.material];
+        mats.forEach((mat) => {
+          if (mat.isMeshStandardMaterial || mat.isMeshPhysicalMaterial) {
+            // Base metal: Shift to a richer deep obsidian / dark titanium tone
+            mat.roughness = 0.25;
+            mat.metalness = 0.85;
+
+            const name = (mat.name || '').toLowerCase();
+            const childName = (child.name || '').toLowerCase();
+            const isAccent =
+              name.includes('eye') ||
+              name.includes('light') ||
+              name.includes('glow') ||
+              name.includes('accent') ||
+              name.includes('cyan') ||
+              name.includes('blue') ||
+              childName.includes('eye') ||
+              (mat.emissive && mat.emissive.getHex() > 0);
+
+            if (isAccent) {
+              // High-pop electric cyan glow
+              mat.emissive = new THREE.Color('#00f0ff');
+              mat.emissiveIntensity = 2.4;
+              mat.color = new THREE.Color('#38bdf8');
+            } else {
+              // Deep obsidian metallic tone
+              mat.color = new THREE.Color('#0f172a');
+            }
+            mat.needsUpdate = true;
+          }
+        });
+      }
+    });
+  }, [scene]);
 
   useEffect(() => {
     if (!actions) return;
@@ -96,12 +151,16 @@ function RobotModel() {
     }
   };
 
+  // Responsive scale and position
+  const modelScale = isMobile ? 0.44 : 0.56;
+  const modelPosition = isMobile ? [0, -1.35, 0] : [0, -1.6, 0];
+
   return (
     <group ref={group} onPointerDown={handlePointerDown}>
       <primitive
         object={scene}
-        scale={0.56}
-        position={[0, -1.6, 0]}
+        scale={modelScale}
+        position={modelPosition}
         rotation={[0, 0, 0]}
       />
     </group>
@@ -152,14 +211,14 @@ export default function RobotMascot() {
       ref={containerRef}
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      className="relative w-full h-[520px] md:h-[620px] mx-auto flex items-center justify-center select-none group bg-transparent"
+      className="relative w-full h-[380px] sm:h-[480px] md:h-[580px] lg:h-[620px] mx-auto flex items-center justify-center select-none group bg-transparent"
       style={{
         perspective: '1200px'
       }}
     >
-      {/* Behind the 3D robot: soft layered glow mesh (cyan-500/15 and blue-600/15) */}
-      <div className="absolute -inset-6 bg-gradient-to-tr from-cyan-500/15 via-blue-600/15 to-transparent blur-3xl -z-10 pointer-events-none rounded-full" />
-      <div className="absolute inset-4 bg-gradient-to-bl from-blue-600/15 via-cyan-400/10 to-transparent blur-2xl -z-10 pointer-events-none rounded-full" />
+      {/* Behind the 3D robot: soft layered glow mesh (cyan-500/20 and blue-600/20) */}
+      <div className="absolute -inset-6 bg-gradient-to-tr from-cyan-500/20 via-blue-600/20 to-transparent blur-3xl -z-10 pointer-events-none rounded-full" />
+      <div className="absolute inset-4 bg-gradient-to-bl from-blue-600/20 via-cyan-400/15 to-transparent blur-2xl -z-10 pointer-events-none rounded-full" />
 
       {/* Seamless Transparent 3D Canvas wrapper */}
       <div
@@ -181,14 +240,17 @@ export default function RobotMascot() {
             }
           >
             <Canvas
+              dpr={[1, 1.5]}
               camera={{ position: [0, 0.2, 5.2], fov: 45 }}
               className="w-full h-full cursor-grab active:cursor-grabbing bg-transparent"
-              gl={{ antialias: true, alpha: true }}
+              gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }}
             >
-              {/* Balanced clean studio lighting */}
-              <ambientLight intensity={0.7} />
-              <directionalLight position={[0, 3, 5]} intensity={1.2} color="#ffffff" />
-              <directionalLight position={[-3, 3, -3]} intensity={0.3} color="#e2e8f0" />
+              {/* Studio lighting: soft ambient and directional rim lights (intensity: 1.8) */}
+              <ambientLight intensity={0.8} />
+              <directionalLight position={[0, 4, 5]} intensity={1.4} color="#ffffff" />
+              <directionalLight position={[-4, 3, -3]} intensity={1.8} color="#00f0ff" />
+              <directionalLight position={[4, 2, -3]} intensity={1.8} color="#3b82f6" />
+              <directionalLight position={[0, -2, 3]} intensity={0.5} color="#38bdf8" />
 
               {/* Smooth Suspense fallback loader */}
               <Suspense fallback={<RobotLoader />}>

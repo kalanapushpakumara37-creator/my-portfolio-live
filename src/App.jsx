@@ -15,7 +15,9 @@ import {
   Film,
   Bot,
   X,
-  Shirt
+  Shirt,
+  FileDown,
+  Download
 } from 'lucide-react';
 
 const ROBOT_GLTF_URL = 'https://raw.githubusercontent.com/mrdoob/three.js/master/examples/models/gltf/RobotExpressive/RobotExpressive.glb';
@@ -415,6 +417,7 @@ function TshirtProjectSection({ design, index, total, onVisible }) {
 function App() {
   const [robotMousePos, setRobotMousePos] = useState({ x: 0, y: 0 });
   const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isCvOpen, setIsCvOpen] = useState(false);
   const [isTshirtGalleryOpen, setIsTshirtGalleryOpen] = useState(false);
   const [isPixelEyeModalOpen, setIsPixelEyeModalOpen] = useState(false);
   const [isAidsModalOpen, setIsAidsModalOpen] = useState(false);
@@ -426,11 +429,12 @@ function App() {
   const [activeDesignIndex, setActiveDesignIndex] = useState(0);
   const robotContainerRef = useRef(null);
 
-  // Esc key listener and body scroll lock for modals (profile, t-shirt gallery, pixel eye, aids poster, certs, sliot, fiverr, & mediloop)
+  // Esc key listener and body scroll lock for modals (profile, cv, t-shirt gallery, pixel eye, aids poster, certs, sliot, fiverr, & mediloop)
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (e.key === 'Escape') {
         setIsProfileOpen(false);
+        setIsCvOpen(false);
         setIsTshirtGalleryOpen(false);
         setIsPixelEyeModalOpen(false);
         setIsAidsModalOpen(false);
@@ -441,7 +445,7 @@ function App() {
         setIsMediloopModalOpen(false);
       }
     };
-    if (isProfileOpen || isTshirtGalleryOpen || isPixelEyeModalOpen || isAidsModalOpen || isCertModalOpen || isSliotModalOpen || isFiverrModalOpen || isMediloopModalOpen) {
+    if (isProfileOpen || isCvOpen || isTshirtGalleryOpen || isPixelEyeModalOpen || isAidsModalOpen || isCertModalOpen || isSliotModalOpen || isFiverrModalOpen || isMediloopModalOpen) {
       window.addEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'hidden';
     }
@@ -449,7 +453,7 @@ function App() {
       window.removeEventListener('keydown', handleKeyDown);
       document.body.style.overflow = 'unset';
     };
-  }, [isProfileOpen, isTshirtGalleryOpen, isPixelEyeModalOpen, isAidsModalOpen, isCertModalOpen, isSliotModalOpen, isFiverrModalOpen, isMediloopModalOpen]);
+  }, [isProfileOpen, isCvOpen, isTshirtGalleryOpen, isPixelEyeModalOpen, isAidsModalOpen, isCertModalOpen, isSliotModalOpen, isFiverrModalOpen, isMediloopModalOpen]);
 
   const scrollToAnchor = (elementId) => {
     document.getElementById(elementId)?.scrollIntoView({ behavior: 'smooth' });
@@ -690,15 +694,48 @@ function App() {
           </a>
         </div>
 
-        {/* Navigation Links */}
-        <div className="hidden md:flex items-center space-x-8 text-sm font-medium text-[#94A3B8]">
+        {/* Navigation Links (Desktop) */}
+        <div className="hidden md:flex items-center space-x-6 text-sm font-medium text-[#94A3B8]">
           <a href="#about" className="hover:text-cyan-300 transition-colors">About</a>
           <a href="#pillars" className="hover:text-cyan-300 transition-colors">Pillars</a>
           <a href="#projects" className="hover:text-cyan-300 transition-colors">Projects</a>
           <a href="#skills" className="hover:text-cyan-300 transition-colors">Toolkit</a>
+          
+          {/* Glowing CV Modal Trigger Button (Desktop) */}
+          <button
+            type="button"
+            onClick={() => setIsCvOpen(true)}
+            aria-label="View Curriculum Vitae"
+            className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/40 hover:border-cyan-400 text-cyan-300 hover:text-cyan-200 shadow-[0_0_15px_rgba(6,182,212,0.2)] hover:shadow-[0_0_20px_rgba(6,182,212,0.45)] transition-all duration-300 text-xs font-semibold cursor-pointer transform hover:-translate-y-0.5 active:scale-95"
+          >
+            <FileDown className="w-3.5 h-3.5 text-cyan-400" />
+            <span>CV</span>
+          </button>
+
           <a
             href="#contact"
             className="px-4 py-2 rounded-xl backdrop-blur-md bg-slate-900/60 border border-slate-800/80 hover:border-cyan-400/70 text-[#F8FAFC] hover:text-cyan-300 shadow-lg shadow-cyan-500/10 hover:shadow-cyan-500/30 transition-all duration-300 text-xs font-semibold"
+          >
+            Get In Touch
+          </a>
+        </div>
+
+        {/* Mobile Navigation Bar Buttons */}
+        <div className="flex md:hidden items-center gap-2">
+          {/* Glowing CV Modal Trigger Button (Mobile) */}
+          <button
+            type="button"
+            onClick={() => setIsCvOpen(true)}
+            aria-label="View Curriculum Vitae"
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl bg-cyan-500/10 hover:bg-cyan-500/20 border border-cyan-500/40 text-cyan-300 shadow-[0_0_12px_rgba(6,182,212,0.25)] transition-all text-xs font-semibold cursor-pointer active:scale-95"
+          >
+            <FileDown className="w-3.5 h-3.5 text-cyan-400" />
+            <span>CV</span>
+          </button>
+
+          <a
+            href="#contact"
+            className="px-3 py-1.5 rounded-xl backdrop-blur-md bg-slate-900/60 border border-slate-800/80 text-[#F8FAFC] hover:text-cyan-300 transition-all text-xs font-semibold"
           >
             Get In Touch
           </a>
@@ -1317,12 +1354,13 @@ function App() {
         <h2 className="text-3xl md:text-4xl font-black text-[#F8FAFC] mb-6">
           Behind the Canvas
         </h2>
-        <p className="text-[#94A3B8] text-lg md:text-xl leading-relaxed max-w-3xl mx-auto mb-8 font-light">
-          I am Kalana — a multidisciplinary creative designer dedicated to producing visuals that captivate and convert. 
-          By unifying <span className="text-blue-400 font-semibold">Photoshop graphic mastery</span>, 
-          <span className="text-cyan-400 font-semibold"> dynamic CapCut video storytelling</span>, and 
-          <span className="text-rose-400 font-semibold"> Figma UI/UX architecture</span>, I build end-to-end digital assets 
-          that elevate modern brands and resonate with audiences worldwide.
+        <p className="text-slate-300 text-sm sm:text-base md:text-lg leading-relaxed max-w-3xl mx-auto font-light">
+          I am Kalana — a multidisciplinary creative designer dedicated to producing visuals that captivate and convert. By unifying{" "}
+          <span className="text-blue-400 font-medium">Photoshop graphic mastery</span>,{" "}
+          <span className="text-cyan-400 font-medium">dynamic CapCut video storytelling</span>, and{" "}
+          <span className="text-rose-400 font-medium">Figma UI/UX architecture</span>, I craft end-to-end digital assets that elevate modern brands. Currently pursuing my degree in{" "}
+          <span className="text-emerald-400 font-medium">Biomedical Technology</span>, my flexible academic schedule enables me to dedicate substantial hours and focused commitment to high-impact{" "}
+          <span className="text-cyan-300 font-medium underline underline-offset-4 decoration-cyan-500/50">remote collaborations</span> worldwide.
         </p>
       </section>
 
@@ -1428,6 +1466,72 @@ function App() {
               <span className="inline-block mt-2.5 text-[11px] font-medium text-slate-400 bg-slate-900/80 border border-slate-800 px-3 py-1 rounded-full">
                 Press <kbd className="font-mono text-slate-200">Esc</kbd> or click anywhere to close
               </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Interactive Curriculum Vitae (CV) Lightbox Modal */}
+      {isCvOpen && (
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Curriculum Vitae Modal"
+          onClick={() => setIsCvOpen(false)}
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md animate-fadeIn p-3 sm:p-6 cursor-pointer"
+        >
+          <div
+            className="relative w-full max-w-4xl max-h-[92vh] flex flex-col bg-slate-950/95 border border-slate-800/90 rounded-2xl md:rounded-3xl shadow-[0_0_50px_rgba(6,182,212,0.2)] overflow-hidden cursor-default"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-800/80 bg-slate-900/60 backdrop-blur-md">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400">
+                  <FileDown className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm sm:text-base font-bold text-slate-100 leading-tight">
+                    Curriculum Vitae — Kalana Thotagama
+                  </h3>
+                  <p className="text-[11px] text-slate-400 hidden sm:block">
+                    Graphic Designer & Biomedical Technology
+                  </p>
+                </div>
+              </div>
+
+              {/* Action Buttons: Download + Close */}
+              <div className="flex items-center gap-2 sm:gap-3">
+                <a
+                  href="/kalana-cv.jpg"
+                  download="Kalana_Thotagama_CV.jpg"
+                  className="flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-semibold text-xs shadow-md shadow-cyan-500/20 hover:shadow-cyan-400/40 transition-all duration-200 cursor-pointer transform hover:scale-105 active:scale-95"
+                >
+                  <Download className="w-3.5 h-3.5" />
+                  <span>Download CV</span>
+                </a>
+
+                <button
+                  type="button"
+                  onClick={() => setIsCvOpen(false)}
+                  aria-label="Close CV modal"
+                  className="p-1.5 sm:p-2 rounded-xl bg-slate-900 border border-slate-700/80 text-slate-400 hover:text-white hover:border-cyan-400 transition-colors cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
+            </div>
+
+            {/* Modal Body: Scrollable Centered Image Container */}
+            <div className="overflow-y-auto max-h-[calc(92vh-70px)] p-3 sm:p-6 flex justify-center items-start bg-slate-950/80">
+              <div className="relative group max-w-2xl w-full rounded-xl overflow-hidden border border-slate-800 shadow-2xl bg-white">
+                <img
+                  src="/kalana-cv.jpg"
+                  alt="Curriculum Vitae - Kalana Thotagama"
+                  className="w-full h-auto object-contain select-none"
+                  loading="eager"
+                />
+              </div>
             </div>
           </div>
         </div>
